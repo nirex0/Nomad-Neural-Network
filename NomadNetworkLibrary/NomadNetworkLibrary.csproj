@@ -1,7 +1,19 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>netcoreapp3.1</TargetFramework>
+    <TargetFramework>netcoreapp3.0</TargetFramework>
+    <Authors>Nirex</Authors>
+    <Company>Nirex</Company>
+    <Description>A neural network library made as an example use-case of the package: VI-Nomad</Description>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
+    <Copyright>(C) Nirex Under Apache 2.0 License</Copyright>
+    <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
+    <RepositoryUrl>https://github.com/nirex0/Nomad-Neural-Network</RepositoryUrl>
+    <PackageTags>Matrix, Nomad, Library, Example</PackageTags>
+    <RepositoryType>Git Repository</RepositoryType>
+    <NeutralLanguage>English</NeutralLanguage>
+    <PackageProjectUrl>https://github.com/nirex0/Nomad-Neural-Network</PackageProjectUrl>
   </PropertyGroup>
 
   <ItemGroup>

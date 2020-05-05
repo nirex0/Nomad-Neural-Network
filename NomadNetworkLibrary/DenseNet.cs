@@ -70,7 +70,6 @@ namespace NomadNetworkLibrary
             public int NumberOfInputs { get; }
             public int NumberOfOuputs { get; }
 
-
             public Matrix Outputs; // Z
             public Matrix Inputs; // A (Or X for the first layer)
             public Matrix Weights; // W (TODO: add b)
