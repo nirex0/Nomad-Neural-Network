@@ -130,3 +130,7 @@ var acc = (double)correct / 1000.0 * 100;
 ```
 
 And we are done, this very example can also be found in the test project.
+
+### Also!
+
+About that 10 lines thing, if you actually go into the source code of the Layer function, you'll see that it operates with 10 lines of code (within functions of course)
