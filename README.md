@@ -1,4 +1,5 @@
-# Nomad Neural Network
+# Nomad Neural Network [![Circle Ci](https://circleci.com/gh/nirex0/Nomad-Neural-Network.svg?style=shield)](https://app.circleci.com/pipelines/github/nirex0/Nomad-Neural-Network)
+
 A Neural Network made in 10 lines using [Nomad](https://github.com/void-intelligence/Nomad) Matrix Library.
 
 This repo here serves the purpose of an example project and nothing more, to see how you can work with Nomad to create a library of your own from scratch (or as scratch as it gets!)
