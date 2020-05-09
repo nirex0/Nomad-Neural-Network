@@ -26,7 +26,8 @@ namespace NomadNetworkLibrary
             //creates neural layers
             _layers = new Layer[layer.Count - 1];
 
-            for (var i = 0; i < _layers.Length; i++) _layers[i] = new Layer(layer[i], layer[i + 1]);
+            for (var i = 0; i < _layers.Length; i++)
+                _layers[i] = new Layer(layer[i], layer[i + 1], i);
         }
 
         /// <summary>
@@ -38,9 +39,9 @@ namespace NomadNetworkLibrary
         {
             //feed forward
             _layers[0].FeedForward(inputs);
-            for (var i = 1; i < _layers.Length; i++) _layers[i].FeedForward(_layers[i - 1].Outputs);
+            for (var i = 1; i < _layers.Length; i++) _layers[i].FeedForward(_layers[i - 1].A);
 
-            return _layers[^1].Outputs; //return output of last layer
+            return _layers[^1].A; //return output of last layer
         }
 
         /// <summary>
@@ -55,7 +56,7 @@ namespace NomadNetworkLibrary
                 if (i == _layers.Length - 1)
                     _layers[i].BackPropOutput(expected); //back prop output
                 else
-                    _layers[i].BackPropHidden(_layers[i + 1].Dz, _layers[i + 1].Weights); //back prop hidden
+                    _layers[i].BackPropHidden(_layers[i + 1].Dz, _layers[i + 1].W); //back prop hidden
 
             //Update weights
             foreach (var t in _layers)
@@ -69,13 +70,15 @@ namespace NomadNetworkLibrary
         {
             public int NumberOfInputs { get; }
             public int NumberOfOuputs { get; }
+            public int Index { get; }
 
-            public Matrix Outputs; // Z
-            public Matrix Inputs; // A (Or X for the first layer)
-            public Matrix Weights; // W (TODO: add b)
-            public Matrix WeightsDelta; // dJdW
-            public Matrix Dz; // dZ
-            public Matrix Error; // J(W) TODO: (J, B)
+            public Matrix A; // Outputs
+            public Matrix Z; // Transfer
+            public Matrix X; // Inputs
+            public Matrix W; // Weights
+            public Matrix dw; // Delta Weights
+            public Matrix Dz; // Delta Transfer
+            public Matrix Error; // J(W)
 
             public static Random Random = new Random();
 
@@ -84,16 +87,18 @@ namespace NomadNetworkLibrary
             /// </summary>
             /// <param name="numberOfInputs">Number of neurons in the previous layer</param>
             /// <param name="numberOfOuputs">Number of neurons in the current layer</param>
-            public Layer(int numberOfInputs, int numberOfOuputs)
+            /// <param name="index">Index of layer in network</param>
+            public Layer(int numberOfInputs, int numberOfOuputs, int index)
             {
+                Index = index;
                 NumberOfInputs = numberOfInputs;
                 NumberOfOuputs = numberOfOuputs;
 
                 //initilize datastructures
-                Outputs = new Matrix(numberOfOuputs, 1);
-                Inputs = new Matrix(numberOfInputs, 1);
-                Weights = new Matrix(numberOfOuputs, numberOfInputs);
-                WeightsDelta = new Matrix(numberOfOuputs, numberOfInputs);
+                A = new Matrix(numberOfOuputs, 1);
+                X = new Matrix(numberOfInputs, 1);
+                W = new Matrix(numberOfOuputs, numberOfInputs);
+                dw = new Matrix(numberOfOuputs, numberOfInputs);
                 Dz = new Matrix(numberOfOuputs, 1);
                 Error = new Matrix(numberOfOuputs, 1);
 
@@ -105,7 +110,8 @@ namespace NomadNetworkLibrary
             /// </summary>
             public void InitilizeWeights()
             {
-                Weights.InRandomize(-0.5, 0.5);
+                W.InRandomize(-0.5, 0.5);
+                W *= 0.01;
             }
 
             /// <summary>
@@ -115,9 +121,10 @@ namespace NomadNetworkLibrary
             /// <returns></returns>
             public Matrix FeedForward(Matrix inputs)
             {
-                Inputs = inputs;
-                Outputs = (Weights * inputs).Map(Math.Tanh);
-                return Outputs;
+                X = inputs;
+                Z = W * inputs;
+                A = Z.Map(Math.Tanh);
+                return A;
             }
 
             /// <summary>
@@ -136,9 +143,10 @@ namespace NomadNetworkLibrary
             /// <param name="expected">The expected output</param>
             public void BackPropOutput(Matrix expected)
             {
-                Error = Outputs - expected;
-                Dz = Error.Hadamard(Outputs.Map(TanHDer));
-                WeightsDelta = (Dz * Inputs).T();
+                var da = A - expected;
+                var gp = A.Map(TanHDer);
+                Dz = da.Hadamard(gp);
+                dw = (Dz * X).T();
             }
 
             /// <summary>
@@ -149,8 +157,8 @@ namespace NomadNetworkLibrary
             public void BackPropHidden(Matrix da, Matrix weightsFoward)
             {
                 Dz = weightsFoward.T() * da;
-                Dz.InHadamard(Outputs.Map(TanHDer));
-                WeightsDelta = Dz * Inputs.T();
+                Dz.InHadamard(A.Map(TanHDer));
+                dw = Dz * X.T();
             }
 
             /// <summary>
@@ -158,7 +166,7 @@ namespace NomadNetworkLibrary
             /// </summary>
             public void UpdateWeights()
             {
-                Weights -= WeightsDelta * 0.033f;
+                W -= dw * 0.03f;
             }
         }
     }

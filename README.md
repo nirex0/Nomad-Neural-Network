@@ -83,31 +83,10 @@ outputs.Add(n.Duplicate());
 We then train the network using the FeedForward and Backprop methods in a loop:
 
 ```
-for (var i = 0; i < 5000; i++)
+for (var i = 0; i < 50; i++)
 {
-    net.FeedForward(inputs[0]);
-    net.BackProp(outputs[0]);
-
-    net.FeedForward(inputs[1]);
-    net.BackProp(outputs[1]);
-
-    net.FeedForward(inputs[2]);
-    net.BackProp(outputs[2]);
-
-    net.FeedForward(inputs[3]);
-    net.BackProp(outputs[3]);
-
-    net.FeedForward(inputs[4]);
-    net.BackProp(outputs[4]);
-
-    net.FeedForward(inputs[5]);
-    net.BackProp(outputs[5]);
-
-    net.FeedForward(inputs[6]);
-    net.BackProp(outputs[6]);
-
-    net.FeedForward(inputs[7]);
-    net.BackProp(outputs[7]);
+    net.FeedForward(inputs[i % 8]);
+    net.BackProp(outputs[i % 8]);
 }
 ```
 

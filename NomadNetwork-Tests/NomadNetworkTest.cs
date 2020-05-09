@@ -13,89 +13,47 @@ namespace NomadNetwork_Tests
         [TestMethod]
         public void DenseNetXor()
         {
-            var net = new DenseNet(new int[] { 3, 25, 25, 1 }); //intiilize network
+            var net = new DenseNet(new int[] { 3, 25, 25, 1 });
 
             var inputs = new List<Matrix>();
             var outputs = new List<Matrix>();
 
-            var m = new Matrix(3, 1);
-            var n = new Matrix(1, 1);
-
             // 0 0 0    => 0
-            m[0, 0] = 0; m[1, 0] = 0; m[2, 0] = 0;
-            n[0, 0] = 0;
-            inputs.Add(m.Duplicate());
-            outputs.Add(n.Duplicate());
+            inputs.Add(new Matrix(new double[,] { { 0.0 }, { 0.0 }, { 0.0 } }));
+            outputs.Add(new Matrix(new double[,] { { 0.0 } }));
 
             // 0 0 1    => 1
-            m[0, 0] = 0; m[1, 0] = 0; m[2, 0] = 1;
-            n[0, 0] = 1;
-            inputs.Add(m.Duplicate());
-            outputs.Add(n.Duplicate());
+            inputs.Add(new Matrix(new double[,] { { 0.0 }, { 0.0 }, { 1.0 } }));
+            outputs.Add(new Matrix(new double[,] { { 1.0 } }));
 
             // 0 1 0    => 1
-            m[0, 0] = 0; m[1, 0] = 1; m[2, 0] = 0;
-            n[0, 0] = 1;
-            inputs.Add(m.Duplicate());
-            outputs.Add(n.Duplicate());
+            inputs.Add(new Matrix(new double[,] { { 0.0 }, { 1.0 }, { 0.0 } }));
+            outputs.Add(new Matrix(new double[,] { { 1.0 } }));
 
             // 0 1 1    => 0
-            m[0, 0] = 0; m[1, 0] = 1; m[2, 0] = 1;
-            n[0, 0] = 0;
-            inputs.Add(m.Duplicate());
-            outputs.Add(n.Duplicate());
+            inputs.Add(new Matrix(new double[,] { { 0.0 }, { 1.0 }, { 1.0 } }));
+            outputs.Add(new Matrix(new double[,] { { 1.0 } }));
 
             // 1 0 0    => 1
-            m[0, 0] = 1; m[1, 0] = 0; m[2, 0] = 0;
-            n[0, 0] = 1;
-            inputs.Add(m.Duplicate());
-            outputs.Add(n.Duplicate());
+            inputs.Add(new Matrix(new double[,] { { 1.0 }, { 0.0 }, { 0.0 } }));
+            outputs.Add(new Matrix(new double[,] { { 1.0 } }));
 
             // 1 0 1    => 0
-            m[0, 0] = 1; m[1, 0] = 0; m[2, 0] = 1;
-            n[0, 0] = 0;
-            inputs.Add(m.Duplicate());
-            outputs.Add(n.Duplicate());
+            inputs.Add(new Matrix(new double[,] { { 1.0 }, { 0.0 }, { 1.0 } }));
+            outputs.Add(new Matrix(new double[,] { { 0.0 } }));
 
             // 1 1 0    => 0
-            m[0, 0] = 1; m[1, 0] = 1; m[2, 0] = 0;
-            n[0, 0] = 0;
-            inputs.Add(m.Duplicate());
-            outputs.Add(n.Duplicate());
+            inputs.Add(new Matrix(new double[,] { { 1.0 }, { 1.0 }, { 0.0 } }));
+            outputs.Add(new Matrix(new double[,] { { 0.0 } }));
 
             // 1 1 1    => 1
-            m[0, 0] = 1; m[1, 0] = 1; m[2, 0] = 1;
-            n[0, 0] = 1;
-            inputs.Add(m.Duplicate());
-            outputs.Add(n.Duplicate());
+            inputs.Add(new Matrix(new double[,] { { 1.0 }, { 1.0 }, { 1.0 } }));
+            outputs.Add(new Matrix(new double[,] { { 1.0 } }));
 
-            //Itterate 5000 times and train each possible output
-            //5000*8 = 40000 traning operations
-            for (var i = 0; i < 5000; i++)
+            for (var i = 0; i < 50; i++)
             {
-                net.FeedForward(inputs[0]);
-                net.BackProp(outputs[0]);
-
-                net.FeedForward(inputs[1]);
-                net.BackProp(outputs[1]);
-
-                net.FeedForward(inputs[2]);
-                net.BackProp(outputs[2]);
-
-                net.FeedForward(inputs[3]);
-                net.BackProp(outputs[3]);
-
-                net.FeedForward(inputs[4]);
-                net.BackProp(outputs[4]);
-
-                net.FeedForward(inputs[5]);
-                net.BackProp(outputs[5]);
-
-                net.FeedForward(inputs[6]);
-                net.BackProp(outputs[6]);
-
-                net.FeedForward(inputs[7]);
-                net.BackProp(outputs[7]);
+                net.FeedForward(inputs[i % 8]);
+                net.BackProp(outputs[i % 8]);
             }
 
             var correct = 0;
@@ -124,7 +82,7 @@ namespace NomadNetwork_Tests
             correctness &= Abs(net.FeedForward(inputs[7])[0, 0]) - 1 < 0.1;
 
             Trace.WriteLine(" Acc: " + acc);
-            Assert.IsTrue(correctness,"Network did not learn XOR");
+            Assert.IsTrue(correctness, "Network did not learn XOR");
         }
     }
 }
