@@ -1,6 +1,6 @@
 # Nomad Neural Network [![Circle Ci](https://circleci.com/gh/nirex0/Nomad-Neural-Network.svg?style=shield)](https://app.circleci.com/pipelines/github/nirex0/Nomad-Neural-Network)
 
-A Neural Network made in 10 lines using [Nomad](https://github.com/void-intelligence/Nomad) Matrix Library.
+A Neural Network made using [Nomad](https://github.com/void-intelligence/Nomad) Matrix Library.
 
 This repo here serves the purpose of an example project and nothing more, to see how you can work with Nomad to create a library of your own from scratch (or as scratch as it gets!)
 
@@ -110,7 +110,3 @@ var acc = (double)correct / 1000.0 * 100;
 ```
 
 And we are done, this very example can also be found in the test project.
-
-### Also!
-
-About that 10 lines thing, if you actually go into the source code of the Layer function, you'll see that it operates with 10 lines of code (within functions of course)
